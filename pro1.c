@@ -5,11 +5,13 @@
 
 int threads= 2;
 
-void *prime(){
+void *prime(void *n){
+int *p=(int *)n;
+int no=*p;
 clock_t start =clock();
 int count =0;
 
-for(int i =2; i< 5000000;i++){
+for(int i =2; i< no;i++){
     int p =1;
     for(int j=2;j*j<=i;j++){
       if(i%j==0){
@@ -27,28 +29,23 @@ else if(count > 348413)
         }
 
 clock_t end =clock();
-printf("\n\nThere are %d primes under 5000000.",count);
-printf("Program took %d times.",(end-start));
+printf("\n\nThere are %d primes under %d.\n",count,no);
+printf("Program took %d times.\n",(end-start));
 
 pthread_exit(NULL);
 }
 
 int main(){
-pthread_t thread[threads];
-int rc;
-int i;
-for(i=0;i<threads;i++){
-rc=pthread_create(&thread[i],NULL,prime,NULL);
-pthread_join(thread[i],NULL);
-if(rc){
-printf("ERROR - In creation of thread");
-exit(0);
-}
-}
+pthread_t thread;
+
+int number;
+printf("Enter Number : ");
+scanf("%d",&number);
+pthread_create(&thread,NULL,prime,&number);
+pthread_join(thread,NULL);
 
 pthread_exit(NULL);
 }
-
 
 
 
